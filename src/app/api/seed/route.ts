@@ -1,8 +1,17 @@
 import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
 export async function POST() {
+  // Only allow seeding when authenticated OR in development
+  const session = await getServerSession(authOptions)
+  const isDev = process.env.NODE_ENV === 'development'
+  if (!session && !isDev) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+
   try {
     // Create admin user
     const hashedPassword = await bcrypt.hash('Admin123!', 10)

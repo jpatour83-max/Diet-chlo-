@@ -20,6 +20,14 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>
 
+const ALLOWED_UTM_SOURCES = ['facebook', 'instagram', 'google', 'retargeting', 'direct', 'email', 'organic']
+
+function sanitizeUtmSource(value: string | null): string {
+  if (!value) return 'direct'
+  const lower = value.toLowerCase().replace(/[^a-z0-9_-]/g, '')
+  return ALLOWED_UTM_SOURCES.includes(lower) ? lower : 'direct'
+}
+
 const timeSlots = [
   '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
   '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30',
@@ -88,7 +96,7 @@ export default function BookingForm() {
           ...data,
           date: selectedDate.toISOString(),
           timeSlot: selectedSlot,
-          source: new URLSearchParams(window.location.search).get('utm_source') || 'direct',
+          source: sanitizeUtmSource(new URLSearchParams(window.location.search).get('utm_source')),
         }),
       })
       
