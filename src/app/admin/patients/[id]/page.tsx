@@ -26,8 +26,9 @@ const objectiveLabels: Record<string, string> = {
   performance: 'Performance sportive',
 }
 
-export default async function PatientDetailPage({ params }: { params: { id: string } }) {
-  const patient = await getPatient(params.id)
+export default async function PatientDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const patient = await getPatient(id)
   if (!patient) notFound()
 
   const latestMetric = patient.healthMetrics[0]

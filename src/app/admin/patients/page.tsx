@@ -42,9 +42,10 @@ const sourceLabels: Record<string, { label: string; color: string }> = {
 export default async function PatientsPage({
   searchParams,
 }: {
-  searchParams: { search?: string; status?: string }
+  searchParams: Promise<{ search?: string; status?: string }>
 }) {
-  const patients = await getPatients(searchParams.search, searchParams.status)
+  const resolvedSearchParams = await searchParams
+  const patients = await getPatients(resolvedSearchParams.search, resolvedSearchParams.status)
 
   return (
     <div className="p-8">
@@ -69,14 +70,14 @@ export default async function PatientsPage({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               name="search"
-              defaultValue={searchParams.search}
+              defaultValue={resolvedSearchParams.search}
               placeholder="Rechercher un patient..."
               className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             />
           </div>
           <select
             name="status"
-            defaultValue={searchParams.status}
+            defaultValue={resolvedSearchParams.status}
             className="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
           >
             <option value="">Tous les statuts</option>
@@ -101,7 +102,7 @@ export default async function PatientsPage({
             <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="font-medium">Aucun patient trouvé</p>
             <p className="text-sm mt-1">
-              {searchParams.search ? 'Essayez une autre recherche' : 'Ajoutez votre premier patient'}
+              {resolvedSearchParams.search ? 'Essayez une autre recherche' : 'Ajoutez votre premier patient'}
             </p>
             <Link
               href="/admin/patients/nouveau"

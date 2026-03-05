@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session) {
@@ -13,8 +13,9 @@ export async function GET(
   }
 
   try {
+    const { id } = await params
     const patient = await prisma.patient.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         appointments: { orderBy: { date: 'desc' } },
         healthMetrics: { orderBy: { date: 'desc' } },
@@ -34,7 +35,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session) {
@@ -42,9 +43,10 @@ export async function PUT(
   }
 
   try {
+    const { id } = await params
     const body = await request.json()
     const patient = await prisma.patient.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         firstName: body.firstName,
         lastName: body.lastName,
@@ -74,7 +76,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   if (!session) {
@@ -82,7 +84,8 @@ export async function DELETE(
   }
 
   try {
-    await prisma.patient.delete({ where: { id: params.id } })
+    const { id } = await params
+    await prisma.patient.delete({ where: { id } })
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('DELETE /api/patients/[id] error:', err)

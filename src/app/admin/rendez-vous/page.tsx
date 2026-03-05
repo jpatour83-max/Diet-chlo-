@@ -31,10 +31,11 @@ async function getWeekAppointments(weekStart: Date) {
 export default async function AppointmentsPage({
   searchParams,
 }: {
-  searchParams: { date?: string }
+  searchParams: Promise<{ date?: string }>
 }) {
+  const resolvedSearchParams = await searchParams
   const today = new Date()
-  const selectedDateStr = searchParams.date || format(today, 'yyyy-MM-dd')
+  const selectedDateStr = resolvedSearchParams.date || format(today, 'yyyy-MM-dd')
   const selectedDate = new Date(selectedDateStr)
   
   // Get current week start (Monday)
