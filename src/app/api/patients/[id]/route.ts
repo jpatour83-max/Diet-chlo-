@@ -19,7 +19,8 @@ export async function GET(
       return NextResponse.json({ error: 'Patient introuvable' }, { status: 404 })
     }
     return NextResponse.json(patient)
-  } catch {
+  } catch (err) {
+    console.error('GET /api/patients/[id] error:', err)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
@@ -53,7 +54,8 @@ export async function PUT(
       },
     })
     return NextResponse.json(patient)
-  } catch {
+  } catch (err) {
+    console.error('PUT /api/patients/[id] error:', err)
     return NextResponse.json({ error: 'Erreur lors de la mise à jour' }, { status: 500 })
   }
 }
@@ -65,7 +67,8 @@ export async function DELETE(
   try {
     await prisma.patient.delete({ where: { id: params.id } })
     return NextResponse.json({ success: true })
-  } catch {
+  } catch (err) {
+    console.error('DELETE /api/patients/[id] error:', err)
     return NextResponse.json({ error: 'Erreur lors de la suppression' }, { status: 500 })
   }
 }

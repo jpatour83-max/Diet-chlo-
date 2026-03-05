@@ -7,7 +7,8 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     })
     return NextResponse.json(campaigns)
-  } catch {
+  } catch (err) {
+    console.error('GET /api/campaigns error:', err)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
@@ -31,7 +32,8 @@ export async function POST(request: Request) {
       },
     })
     return NextResponse.json(campaign, { status: 201 })
-  } catch {
+  } catch (err) {
+    console.error('POST /api/campaigns error:', err)
     return NextResponse.json({ error: 'Erreur lors de la création de la campagne' }, { status: 500 })
   }
 }

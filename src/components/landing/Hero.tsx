@@ -139,7 +139,7 @@ export default function Hero() {
                     <p className="text-xs text-gray-500">Patients</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-emerald-600">5ans</p>
+                    <p className="text-2xl font-bold text-emerald-600">5 ans</p>
                     <p className="text-xs text-gray-500">d&apos;expérience</p>
                   </div>
                   <div>
