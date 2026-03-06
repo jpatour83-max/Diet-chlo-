@@ -1,11 +1,12 @@
+/* Google Fonts variables used by Tailwind — actual loading via <link> in layout.tsx */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-inter: 'Inter', system-ui, sans-serif;
 }
 
 * {
@@ -16,6 +17,17 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  font-family: var(--font-inter), system-ui, sans-serif;
+@layer base {
+  body {
+    background-color: #ffffff;
+    color: #1C2B1E;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
 }
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
