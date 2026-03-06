@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "setup": "prisma db push && node -e \"require('http').request({hostname:'localhost',port:3000,path:'/api/seed',method:'POST'},r=>{r.resume();r.on('end',()=>console.log('Seed OK'))}).end()\""
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
