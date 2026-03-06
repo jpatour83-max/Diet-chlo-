@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+}
+
+model Patient {
+  id            String             @id @default(cuid())
+  firstName     String
+  lastName      String
+  email         String             @unique
+  phone         String
+  dateOfBirth   DateTime?
+  gender        String?
+  address       String?
+  city          String?
+  postalCode    String?
+  objective     String?
+  pathology     String?
+  initialWeight Float?
+  targetWeight  Float?
+  height        Float?
+  status        String             @default("prospect")
+  source        String?
+  notes         String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  appointments  Appointment[]
+  healthMetrics HealthMetric[]
+  dietPlans     DietPlan[]
+  consultationNotes ConsultationNote[]
+}
+
+model Appointment {
+  id        String   @id @default(cuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  date      DateTime
+  duration  Int      @default(60)
+  type      String
+  status    String   @default("scheduled")
+  notes     String?
+  price     Float?
+  createdAt DateTime @default(now())
+}
+
+model HealthMetric {
+  id        String   @id @default(cuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  date      DateTime @default(now())
+  weight    Float?
+  bmi       Float?
+  waist     Float?
+  hips      Float?
+  notes     String?
+}
+
+model DietPlan {
+  id          String    @id @default(cuid())
+  patientId   String
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  calories    Int?
+  proteins    Float?
+  carbs       Float?
+  fats        Float?
+  content     String?
+  status      String    @default("active")
+  createdAt   DateTime  @default(now())
+}
+
+model ConsultationNote {
+  id        String   @id @default(cuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  date      DateTime @default(now())
+  content   String
+  nextSteps String?
+}
+
+model Campaign {
+  id          String    @id @default(cuid())
+  name        String
+  platform    String
+  status      String    @default("active")
+  budget      Float
+  spent       Float     @default(0)
+  impressions Int       @default(0)
+  clicks      Int       @default(0)
+  conversions Int       @default(0)
+  startDate   DateTime
+  endDate     DateTime?
+  objective   String?
+  createdAt   DateTime  @default(now())
+}
+
+model BookingRequest {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  type      String
+  date      DateTime
+  timeSlot  String
+  objective String?
+  message   String?
+  status    String   @default("pending")
+  source    String?
+  createdAt DateTime @default(now())
+}
